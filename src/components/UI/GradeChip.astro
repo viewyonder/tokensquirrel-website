@@ -1,0 +1,26 @@
+---
+export interface Props {
+  grade: 'A' | 'B' | 'C' | 'D' | 'F';
+  size?: 'sm' | 'md' | 'lg';
+}
+
+const { grade, size = 'md' } = Astro.props;
+---
+
+<span class:list={['grade-chip', `grade-chip--${grade.toLowerCase()}`, `grade-chip--${size}`]}>
+  {grade}
+</span>
+
+<style>
+  .grade-chip--sm {
+    width: 1.5rem;
+    height: 1.5rem;
+    font-size: var(--text-xs);
+  }
+
+  .grade-chip--lg {
+    width: 2.5rem;
+    height: 2.5rem;
+    font-size: var(--text-lg);
+  }
+</style>

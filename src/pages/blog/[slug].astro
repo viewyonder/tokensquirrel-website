@@ -1,0 +1,146 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import Hero from '../../components/Sections/Hero.astro';
+
+export async function getStaticPaths() {
+  const entries = await getCollection('blog');
+  const visible = entries.filter((e) => (import.meta.env.PROD ? !e.data.draft : true));
+  return visible.map((entry) => ({
+    params: { slug: entry.slug },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await entry.render();
+
+const dateFmt = new Intl.DateTimeFormat('en-GB', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+const formattedDate = dateFmt.format(entry.data.pubDate);
+---
+
+<Layout
+  title={`${entry.data.title} — TokenSquirrel`}
+  description={entry.data.description}
+>
+  <Hero
+    eyebrow={entry.data.draft ? 'Blog · Draft' : 'Blog'}
+    title={entry.data.title}
+    description={formattedDate}
+  />
+
+  <section class="section">
+    <div class="container">
+      <article class="post">
+        <Content />
+        <p class="back"><a href="/blog">← All posts</a></p>
+      </article>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .post {
+    max-width: 70ch;
+    margin: 0 auto;
+    font-family: var(--font-serif);
+    font-size: var(--text-lg);
+    line-height: 1.7;
+    color: var(--color-ink);
+  }
+
+  .post :global(h2) {
+    font-family: var(--font-serif);
+    font-size: var(--text-2xl);
+    margin: var(--space-10) 0 var(--space-4);
+    text-transform: none;
+    letter-spacing: normal;
+  }
+
+  .post :global(h3) {
+    font-family: var(--font-serif);
+    font-size: var(--text-xl);
+    margin: var(--space-8) 0 var(--space-3);
+    text-transform: none;
+    letter-spacing: normal;
+  }
+
+  .post :global(p) {
+    margin: 0 0 var(--space-4);
+  }
+
+  .post :global(a) {
+    color: var(--color-squirrel);
+  }
+
+  .post :global(code) {
+    font-family: var(--font-mono);
+    font-size: 0.9em;
+    background: var(--color-squirrel-bg);
+    padding: 0.1em 0.3em;
+    border-radius: 3px;
+  }
+
+  .post :global(pre) {
+    background: var(--color-ink);
+    color: var(--color-paper);
+    padding: var(--space-4);
+    overflow-x: auto;
+    font-size: var(--text-sm);
+  }
+
+  .post :global(pre code) {
+    background: transparent;
+    padding: 0;
+    color: inherit;
+  }
+
+  .post :global(blockquote) {
+    border-left: 3px solid var(--color-squirrel);
+    margin: var(--space-6) 0;
+    padding: 0 var(--space-6);
+    color: var(--color-ink-light);
+    font-style: italic;
+  }
+
+  .post :global(ul),
+  .post :global(ol) {
+    margin: 0 0 var(--space-4) var(--space-6);
+  }
+
+  .post :global(table) {
+    width: 100%;
+    border-collapse: collapse;
+    margin: var(--space-6) 0;
+    font-family: var(--font-sans);
+    font-size: var(--text-base);
+  }
+
+  .post :global(th),
+  .post :global(td) {
+    text-align: left;
+    padding: var(--space-2) var(--space-3);
+    border-bottom: var(--border-thin);
+  }
+
+  .post :global(th) {
+    font-weight: 600;
+    background: var(--color-squirrel-bg);
+  }
+
+  .back {
+    margin-top: var(--space-12);
+    font-family: var(--font-sans);
+    font-size: var(--text-sm);
+  }
+
+  .back a {
+    color: var(--color-squirrel);
+    text-decoration: none;
+    font-weight: 600;
+  }
+</style>

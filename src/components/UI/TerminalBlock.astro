@@ -1,0 +1,29 @@
+---
+export interface Props {
+  title?: string;
+}
+
+const { title } = Astro.props;
+---
+
+<div class="terminal-block">
+  <div class="terminal-block__header">
+    <span class="terminal-block__dot terminal-block__dot--red"></span>
+    <span class="terminal-block__dot terminal-block__dot--yellow"></span>
+    <span class="terminal-block__dot terminal-block__dot--green"></span>
+    {title && <span class="terminal-block__title">{title}</span>}
+  </div>
+  <pre><slot /></pre>
+</div>
+
+<style>
+  pre {
+    margin: 0;
+    padding: 0;
+    background: transparent;
+    color: inherit;
+    font-size: inherit;
+    line-height: inherit;
+    overflow-x: auto;
+  }
+</style>

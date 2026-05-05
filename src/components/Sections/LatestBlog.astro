@@ -1,0 +1,174 @@
+---
+import { getCollection } from 'astro:content';
+
+const FALLBACK_IMAGE = '/images/tokensquirrel-cyber-hero.webp';
+
+const all = await getCollection('blog');
+const posts = all
+  .filter((p) => (import.meta.env.PROD ? !p.data.draft : true))
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+const latest = posts[0];
+const dateFmt = new Intl.DateTimeFormat('en-GB', {
+  year: 'numeric',
+  month: 'short',
+  day: 'numeric',
+});
+---
+
+{latest && (
+  <section class="section">
+    <div class="container">
+      <h2 class="section-title">From the blog</h2>
+      <p class="section-subtitle">Latest post.</p>
+
+      <div class="latest-card">
+        <a class="latest-image" href={`/blog/${latest.slug}`}>
+          <img
+            src={latest.data.heroImage ?? FALLBACK_IMAGE}
+            alt={latest.data.heroImageAlt ?? latest.data.title}
+            loading="lazy"
+          />
+        </a>
+        <div class="latest-body">
+          <span class="latest-eyebrow">
+            {dateFmt.format(latest.data.pubDate)}
+            {latest.data.draft && <span class="draft-tag"> · draft</span>}
+          </span>
+          <h3>
+            <a href={`/blog/${latest.slug}`}>{latest.data.title}</a>
+          </h3>
+          {latest.data.description && <p>{latest.data.description}</p>}
+          <div class="latest-actions">
+            <a class="latest-cta" href={`/blog/${latest.slug}`}>Read post →</a>
+            <a class="latest-cta latest-cta-muted" href="/blog">All posts →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+)}
+
+<style>
+  .section-title {
+    font-family: var(--font-serif);
+    font-size: var(--text-3xl);
+    margin: 0 0 var(--space-2);
+    text-transform: none;
+    letter-spacing: normal;
+  }
+
+  .section-subtitle {
+    color: var(--color-ink-light);
+    margin: 0 0 var(--space-8);
+  }
+
+  .latest-card {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-8);
+    align-items: stretch;
+    background: var(--color-paper);
+    border: var(--border-thin);
+    border-top: 3px solid var(--color-squirrel);
+    overflow: hidden;
+    transition: border-color var(--transition-fast);
+  }
+
+  .latest-card:hover {
+    border-color: var(--color-squirrel);
+  }
+
+  .latest-image {
+    display: block;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    background: var(--color-squirrel-bg);
+  }
+
+  .latest-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform var(--transition-fast);
+  }
+
+  .latest-image:hover img {
+    transform: scale(1.02);
+  }
+
+  .latest-body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    padding: var(--space-8);
+  }
+
+  .latest-eyebrow {
+    font-family: var(--font-sans);
+    font-size: var(--text-xs);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-wide);
+    color: var(--color-squirrel);
+  }
+
+  .draft-tag {
+    color: var(--color-ink-light);
+  }
+
+  .latest-body h3 {
+    font-family: var(--font-serif);
+    font-size: var(--text-2xl);
+    margin: 0;
+    text-transform: none;
+    letter-spacing: normal;
+    line-height: 1.2;
+  }
+
+  .latest-body h3 a {
+    color: var(--color-ink);
+    text-decoration: none;
+  }
+
+  .latest-body h3 a:hover {
+    color: var(--color-squirrel);
+  }
+
+  .latest-body p {
+    margin: 0;
+    color: var(--color-ink-light);
+    line-height: 1.6;
+  }
+
+  .latest-actions {
+    margin-top: auto;
+    display: flex;
+    gap: var(--space-6);
+    flex-wrap: wrap;
+    padding-top: var(--space-4);
+  }
+
+  .latest-cta {
+    font-family: var(--font-sans);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--color-squirrel);
+    text-decoration: none;
+  }
+
+  .latest-cta-muted {
+    color: var(--color-ink-light);
+  }
+
+  @media (max-width: 768px) {
+    .latest-card {
+      grid-template-columns: 1fr;
+    }
+
+    .latest-body {
+      padding: var(--space-6);
+    }
+  }
+</style>

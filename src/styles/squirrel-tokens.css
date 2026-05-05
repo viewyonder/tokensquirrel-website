@@ -1,0 +1,109 @@
+/* TokenSquirrel Design Overrides
+   Product-specific identity layered on the Viewyonder editorial system */
+
+:root {
+  /* Brand accent — warm amber */
+  --color-squirrel: #c47b2b;
+  --color-squirrel-hover: #a8681f;
+  --color-squirrel-light: #daa04d;
+  --color-squirrel-bg: #fdf6ec;
+
+  /* Grade color scale */
+  --grade-a: #2d8a4e;
+  --grade-b: #5ba854;
+  --grade-c: #c9a227;
+  --grade-d: #d97830;
+  --grade-f: #c0392b;
+
+  /* Terminal block */
+  --terminal-bg: #1a1a2e;
+  --terminal-fg: #e0e0e0;
+  --terminal-green: #4ade80;
+  --terminal-amber: #fbbf24;
+  --terminal-red: #f87171;
+  --terminal-dim: #6b7280;
+}
+
+/* Override accent where squirrel identity should dominate */
+.squirrel-accent {
+  --color-accent: var(--color-squirrel);
+  --color-accent-hover: var(--color-squirrel-hover);
+  --color-accent-light: var(--color-squirrel-light);
+}
+
+/* Grade chip */
+.grade-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  border-radius: 4px;
+  color: var(--color-paper);
+}
+
+.grade-chip--a { background-color: var(--grade-a); }
+.grade-chip--b { background-color: var(--grade-b); }
+.grade-chip--c { background-color: var(--grade-c); }
+.grade-chip--d { background-color: var(--grade-d); }
+.grade-chip--f { background-color: var(--grade-f); }
+
+/* Score bar */
+.score-bar {
+  height: 8px;
+  background: var(--color-paper-dark);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.score-bar__fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width var(--transition-slow);
+}
+
+/* Terminal block */
+.terminal-block {
+  background: var(--terminal-bg);
+  color: var(--terminal-fg);
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  line-height: var(--leading-relaxed);
+  padding: var(--space-6);
+  border-radius: 6px;
+  overflow-x: auto;
+  margin: var(--space-6) 0;
+}
+
+.terminal-block__header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-bottom: var(--space-4);
+  padding-bottom: var(--space-3);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.terminal-block__dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.terminal-block__dot--red { background: #ff5f57; }
+.terminal-block__dot--yellow { background: #febc2e; }
+.terminal-block__dot--green { background: #28c840; }
+
+.terminal-block__title {
+  font-size: var(--text-xs);
+  color: var(--terminal-dim);
+  margin-left: var(--space-2);
+}
+
+.terminal-block .green { color: var(--terminal-green); }
+.terminal-block .amber { color: var(--terminal-amber); }
+.terminal-block .red { color: var(--terminal-red); }
+.terminal-block .dim { color: var(--terminal-dim); }

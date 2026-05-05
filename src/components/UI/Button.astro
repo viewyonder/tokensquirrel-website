@@ -1,0 +1,25 @@
+---
+export interface Props {
+  href?: string;
+  variant?: 'primary' | 'secondary' | 'accent' | 'teal';
+  size?: 'sm' | 'md' | 'lg';
+  class?: string;
+}
+
+const { href, variant = 'primary', size = 'md', class: className, ...rest } = Astro.props;
+
+const Tag = href ? 'a' : 'button';
+---
+
+<Tag
+  href={href}
+  class:list={[
+    'btn',
+    `btn-${variant}`,
+    size !== 'md' && `btn-${size}`,
+    className,
+  ]}
+  {...rest}
+>
+  <slot />
+</Tag>

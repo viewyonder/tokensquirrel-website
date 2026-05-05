@@ -1,0 +1,310 @@
+---
+import Layout from './Layout.astro';
+
+export interface Props {
+  collection: 'guides' | 'tutorials';
+  level: '100' | '200' | '300';
+  title: string;
+  summary: string;
+}
+
+const { collection, level, title, summary } = Astro.props;
+
+const hubLabel = collection === 'guides' ? 'Guides' : 'Tutorials';
+const hubHref = `/${collection}`;
+
+const order: Array<'100' | '200' | '300'> = ['100', '200', '300'];
+const idx = order.indexOf(level);
+const prev = idx > 0 ? order[idx - 1] : null;
+const next = idx < order.length - 1 ? order[idx + 1] : null;
+
+const levelLabel = level === '100' ? 'Beginner' : level === '200' ? 'Intermediate' : 'Advanced';
+
+const pageTitle = `${title} — ${hubLabel} ${level} | TokenSquirrel`;
+---
+
+<Layout title={pageTitle} description={summary}>
+  <article class="leveled">
+    <div class="container container-prose">
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <a href="/">Home</a>
+        <span class="sep">/</span>
+        <a href={hubHref}>{hubLabel}</a>
+        <span class="sep">/</span>
+        <span aria-current="page">Level {level}</span>
+      </nav>
+
+      <header class="leveled-header">
+        <span class="level-badge">Level {level} · {levelLabel}</span>
+        <h1>{title}</h1>
+        <p class="lead">{summary}</p>
+      </header>
+
+      <div class="prose">
+        <slot />
+      </div>
+
+      <nav class="page-nav" aria-label="Level navigation">
+        {prev ? (
+          <a href={`${hubHref}/${prev}`} class="page-nav-link prev">
+            <span class="dir">← Previous</span>
+            <span class="label">Level {prev}</span>
+          </a>
+        ) : <span class="page-nav-spacer" />}
+        <a href={hubHref} class="page-nav-link up">
+          <span class="dir">↑ Back to</span>
+          <span class="label">{hubLabel}</span>
+        </a>
+        {next ? (
+          <a href={`${hubHref}/${next}`} class="page-nav-link next">
+            <span class="dir">Next →</span>
+            <span class="label">Level {next}</span>
+          </a>
+        ) : <span class="page-nav-spacer" />}
+      </nav>
+    </div>
+  </article>
+</Layout>
+
+<style>
+  .leveled {
+    padding: var(--space-12) 0 var(--space-16);
+  }
+
+  .breadcrumb {
+    font-family: var(--font-sans);
+    font-size: var(--text-sm);
+    color: var(--color-ink-light);
+    margin-bottom: var(--space-6);
+  }
+
+  .breadcrumb a {
+    color: var(--color-ink-light);
+    text-decoration: none;
+  }
+
+  .breadcrumb a:hover {
+    color: var(--color-squirrel);
+  }
+
+  .breadcrumb .sep {
+    margin: 0 var(--space-2);
+    opacity: 0.5;
+  }
+
+  .leveled-header {
+    margin-bottom: var(--space-10);
+    padding-bottom: var(--space-8);
+    border-bottom: var(--border-thin);
+  }
+
+  .level-badge {
+    display: inline-block;
+    font-family: var(--font-sans);
+    font-size: var(--text-xs);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-wide);
+    color: var(--color-paper);
+    background: var(--color-squirrel);
+    padding: var(--space-1) var(--space-3);
+    margin-bottom: var(--space-4);
+  }
+
+  .leveled-header h1 {
+    font-family: var(--font-serif);
+    font-size: var(--text-4xl);
+    margin: 0 0 var(--space-4);
+    text-transform: none;
+    letter-spacing: normal;
+    line-height: 1.15;
+  }
+
+  .leveled-header .lead {
+    font-size: var(--text-lg);
+    color: var(--color-ink-light);
+    margin: 0;
+    max-width: 60ch;
+  }
+
+  /* Prose styling for rendered markdown */
+  .prose :global(h2) {
+    font-family: var(--font-serif);
+    font-size: var(--text-2xl);
+    margin: var(--space-10) 0 var(--space-3);
+    text-transform: none;
+    letter-spacing: normal;
+  }
+
+  .prose :global(h3) {
+    font-family: var(--font-serif);
+    font-size: var(--text-xl);
+    margin: var(--space-8) 0 var(--space-3);
+    text-transform: none;
+    letter-spacing: normal;
+  }
+
+  .prose :global(h4) {
+    font-family: var(--font-sans);
+    font-size: var(--text-base);
+    font-weight: 700;
+    margin: var(--space-6) 0 var(--space-2);
+  }
+
+  .prose :global(p),
+  .prose :global(ul),
+  .prose :global(ol) {
+    margin: 0 0 var(--space-4);
+    line-height: 1.7;
+  }
+
+  .prose :global(ul),
+  .prose :global(ol) {
+    padding-left: var(--space-6);
+  }
+
+  .prose :global(li) {
+    margin-bottom: var(--space-2);
+  }
+
+  .prose :global(li > p) {
+    margin-bottom: var(--space-2);
+  }
+
+  .prose :global(a) {
+    color: var(--color-squirrel);
+    text-decoration: underline;
+    text-underline-offset: 0.15em;
+  }
+
+  .prose :global(a:hover) {
+    text-decoration: none;
+  }
+
+  .prose :global(code) {
+    font-family: var(--font-mono);
+    font-size: 0.9em;
+    background: var(--color-squirrel-bg);
+    padding: 0.1em 0.35em;
+    border-radius: 2px;
+  }
+
+  .prose :global(pre) {
+    position: relative;
+    background: #f6f6f4;
+    border: var(--border-thin);
+    padding: var(--space-4) var(--space-5);
+    overflow-x: auto;
+    margin: 0 0 var(--space-6);
+    font-size: var(--text-sm);
+    line-height: 1.55;
+  }
+
+  .prose :global(pre code) {
+    background: none;
+    padding: 0;
+    border-radius: 0;
+    font-size: inherit;
+  }
+
+  .prose :global(blockquote) {
+    margin: var(--space-6) 0;
+    padding: var(--space-4) var(--space-5);
+    background: var(--color-squirrel-bg);
+    border-left: 3px solid var(--color-squirrel);
+    color: var(--color-ink);
+  }
+
+  .prose :global(blockquote p:last-child) {
+    margin-bottom: 0;
+  }
+
+  .prose :global(table) {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0 0 var(--space-6);
+    font-size: var(--text-sm);
+  }
+
+  .prose :global(th),
+  .prose :global(td) {
+    padding: var(--space-2) var(--space-3);
+    border-bottom: var(--border-thin);
+    text-align: left;
+    vertical-align: top;
+  }
+
+  .prose :global(th) {
+    font-family: var(--font-sans);
+    font-weight: 600;
+    background: var(--color-squirrel-bg);
+  }
+
+  .prose :global(hr) {
+    border: none;
+    border-top: var(--border-thin);
+    margin: var(--space-10) 0;
+  }
+
+  .page-nav {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: var(--space-4);
+    margin-top: var(--space-12);
+    padding-top: var(--space-8);
+    border-top: var(--border-thin);
+  }
+
+  .page-nav-link {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    text-decoration: none;
+    color: var(--color-ink);
+    padding: var(--space-3) var(--space-4);
+    border: var(--border-thin);
+    transition: border-color var(--transition-fast), color var(--transition-fast);
+  }
+
+  .page-nav-link:hover {
+    border-color: var(--color-squirrel);
+    color: var(--color-squirrel);
+  }
+
+  .page-nav-link.next {
+    text-align: right;
+  }
+
+  .page-nav-link.up {
+    text-align: center;
+    background: var(--color-squirrel-bg);
+  }
+
+  .page-nav-link .dir {
+    font-family: var(--font-sans);
+    font-size: var(--text-xs);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-wide);
+    color: var(--color-ink-light);
+  }
+
+  .page-nav-link .label {
+    font-family: var(--font-serif);
+    font-size: var(--text-base);
+    font-weight: 600;
+  }
+
+  .page-nav-spacer {
+    display: block;
+  }
+
+  @media (max-width: 640px) {
+    .page-nav {
+      grid-template-columns: 1fr;
+    }
+    .page-nav-link.next,
+    .page-nav-link.up {
+      text-align: left;
+    }
+  }
+</style>

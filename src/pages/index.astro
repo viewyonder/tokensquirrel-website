@@ -1,0 +1,489 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Hero from '../components/Sections/Hero.astro';
+import LatestBlog from '../components/Sections/LatestBlog.astro';
+import Button from '../components/UI/Button.astro';
+import TerminalBlock from '../components/UI/TerminalBlock.astro';
+import BehaviourCard from '../components/Cards/BehaviourCard.astro';
+
+const behaviours = [
+  { title: 'Context Management', description: 'Are you clearing sessions and monitoring context size, or letting windows bloat unchecked?' },
+  { title: 'Spending Visibility', description: 'Do you check costs and usage, or discover the bill at the end of the month?' },
+  { title: 'Plan Mode Usage', description: 'Are you using plan mode for complex tasks, or burning tokens on false starts?' },
+  { title: 'Model Switching', description: 'Are you picking the right model for the job, or running Opus for everything?' },
+  { title: 'Clear Frequency', description: 'How often you reset context — too rarely wastes tokens, too often loses momentum.' },
+  { title: 'Paste Hygiene', description: 'Text input vs. binary and PDF dumps that bloat context with noise.' },
+  { title: 'Session Hygiene', description: 'Focused sessions with clear goals vs. sprawling marathons that lose coherence.' },
+  { title: 'Cache Efficiency', description: 'Are you structuring work to hit prompt caching, or paying full price every turn?' },
+  { title: 'Tool Efficiency', description: 'Tool call-to-message ratio — a proxy for how much work you\'re getting per turn.' },
+  { title: 'MCP/Plugin Hygiene', description: 'Are you loading servers and plugins you\'re not using? Every one costs context tokens.' },
+  { title: 'CLAUDE.md Weight', description: 'Long CLAUDE.md files inject into every prompt. Are yours lean, or quietly burning context on every turn?' },
+  { title: 'Hook Injection Load', description: 'UserPromptSubmit hooks fire on every prompt. Each one costs context tokens you didn\'t ask for.' },
+  { title: 'SessionStart Noise', description: 'Hooks that fire when a session opens. A few are useful; a stack of them is just slow startup.' },
+  { title: 'Skill Bloat', description: 'Installed skills load metadata into context. More skills = more weight, even when you don\'t use them.' },
+  { title: 'MCP Tool-Schema Weight', description: 'Every attached MCP server ships its tool schemas in every request. Trim what you don\'t use.' },
+];
+---
+
+<Layout
+  title="TokenSquirrel — Score Your Claude Code Habits"
+  description="An audit tool that scores 15 Claude Code workflow behaviours — discipline, hygiene, and setup weight. The feedback loop that helps you get more from the plan you're already paying for."
+>
+  <Hero
+    eyebrow="Don't go nuts with your tokens"
+    title="TokenSquirrel"
+    backgroundImage="/images/tokensquirrel-cyber-hero.webp"
+  >
+    <Button href="#get-started" variant="primary" size="lg">Get Started</Button>
+  </Hero>
+
+  <!-- The Problem -->
+  <section class="section">
+    <div class="container">
+      <div class="intro-grid">
+        <div class="intro-content">
+          <h2>Your Claude Workflow Has No Feedback Loop</h2>
+          <p class="lead">
+            Whether you're on Pro, Max, or paying per token on the API, the question isn't
+            whether you're spending too much. It's whether the tokens you're paying for are
+            landing on the work that actually matters — and whether your setup is quietly
+            burning credits before you've typed a single character.
+          </p>
+          <p>
+            Modern Claude Code sessions mix Opus, Sonnet, and Haiku — saving the expensive
+            reasoning for the hard problems, the cheap models for everything else. But they
+            also run alongside MCP servers you forgot you installed, skills you haven't
+            invoked in months, CLAUDE.md files that grew to 800 lines, and hooks firing on
+            every prompt. None of it is <em>broken</em>. It's why you hit the credit limit
+            at 3pm with the hard problem still open, and why your context is 70% full
+            before you start.
+          </p>
+          <p>
+            TokenSquirrel is the missing feedback loop. It audits your Claude Code sessions
+            and scores 15 specific behaviours across discipline, hygiene, and setup weight —
+            each rated 0–100 with a letter grade. The point isn't to spend less. It's to
+            make sure your expensive tokens go where they earn their keep, so you get more
+            from the plan you're already paying for and never run out of credits or context
+            when it matters.
+          </p>
+        </div>
+        <div class="intro-stats">
+          <div class="stat">
+            <span class="stat-number">15</span>
+            <span class="stat-label">behaviours scored</span>
+          </div>
+          <div class="stat">
+            <span class="stat-number">A–F</span>
+            <span class="stat-label">letter grades</span>
+          </div>
+          <div class="stat">
+            <span class="stat-number">0</span>
+            <span class="stat-label">data transmitted</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- What It Looks Like -->
+  <section class="section section-warm">
+    <div class="container">
+      <h2 class="section-title">What It Looks Like</h2>
+      <p class="section-subtitle">One command. Plain English. Zero setup.</p>
+      <TerminalBlock title="npx tokensquirrel">
+<span class="dim">$</span> npx tokensquirrel
+  <span class="green">TokenSquirrel</span>
+  Today: <span class="green">B (72/100)</span>
+  <span class="dim">You ran 6 sessions in the last 24h, averaging 41 messages each.</span>
+  <span class="dim">Trend: ▁▂▃▂▄▅▆▅▆▇  +5 over 30 days.</span>
+
+  <span class="amber">Skill bloat (D, 38)</span> — 47 skills loaded, ~12k context tokens; 18 unused in 30d.
+  <span class="amber">/clear frequency (D, 42)</span> — context windows averaging 71% full at session end.
+  <span class="amber">Cache efficiency (C, 58)</span> — 31% cache-hit rate; restructure prompts to reuse prefixes.
+  <span class="amber">Hook injection load (C, 55)</span> — 4 UserPromptSubmit hooks adding ~800 tok/turn.
+
+  Bottom line: ~$4.20/day spend, ~$1.10 of that is avoidable.
+  <span class="dim">--detail for full scorecard | --trend for history</span>
+      </TerminalBlock>
+    </div>
+  </section>
+
+  <!-- Skills Audit -->
+  <section class="section">
+    <div class="container">
+      <div class="intro-grid">
+        <div class="intro-content">
+          <h2>Audit Your Skills</h2>
+          <p class="lead">
+            Every installed skill loads metadata into context on every turn — even
+            the ones you never invoke.
+          </p>
+          <p>
+            <code>skills --audit</code> groups your skills by plugin, flags any
+            you haven't used in 30 days, and tells you exactly what to uninstall
+            to claw back tokens. Stale plugins are the single biggest source of
+            silent setup-weight cost — and the easiest to fix.
+          </p>
+        </div>
+        <div class="intro-stats">
+          <div class="stat">
+            <span class="stat-number">▸</span>
+            <span class="stat-label">grouped by plugin</span>
+          </div>
+          <div class="stat">
+            <span class="stat-number">●</span>
+            <span class="stat-label">stale-skill flag</span>
+          </div>
+          <div class="stat">
+            <span class="stat-number">$</span>
+            <span class="stat-label">copy-paste uninstall lines</span>
+          </div>
+        </div>
+      </div>
+      <div class="skills-terminal">
+        <TerminalBlock title="npx tokensquirrel claude skills --audit">
+<span class="dim">$</span> npx tokensquirrel claude skills --audit
+
+<span class="dim">▸</span> user — 8 skills · ~3.2k tok
+  Skill                              Plugin    Ctx tok  Used
+  <span class="amber">●</span> using-superpowers                user        420    47d
+  <span class="amber">●</span> brainstorming                    user        310    62d
+    debugging                        user        280     2d
+  <span class="dim">…</span>
+
+<span class="dim">▸</span> posthog@anthropics — 12 skills · ~5.1k tok · <span class="amber">9 stale</span>
+  <span class="amber">●</span> error-analyzer                   posthog     680    91d
+  <span class="amber">●</span> insights-builder                 posthog     540   <span class="red">never</span>
+  <span class="dim">…</span>
+
+<span class="green">Recommendations</span>
+  posthog@anthropics — 9/12 stale, ~3.8k tok reclaimable:
+    <span class="green">/plugin uninstall posthog@anthropics</span>
+  user skills — 4 stale (~1.1k tok):
+    <span class="green">{`rm -rf ~/.claude/skills/{using-superpowers,brainstorming,…}`}</span>
+
+<span class="dim">$</span> npx tokensquirrel claude skills --audit --fix   <span class="dim"># walk through uninstalls interactively</span>
+<span class="dim">$</span> npx tokensquirrel claude skills --stale 30      <span class="dim"># only flag skills idle 30+ days</span>
+<span class="dim">$</span> npx tokensquirrel claude skills --unused        <span class="dim"># only skills never invoked</span>
+<span class="dim">$</span> npx tokensquirrel claude skills --by tokens     <span class="dim"># sort by ctx weight (also: used, size, mtime)</span>
+        </TerminalBlock>
+      </div>
+    </div>
+  </section>
+
+  <!-- MCPs Audit -->
+  <section class="section">
+    <div class="container">
+      <div class="intro-grid">
+        <div class="intro-content">
+          <h2>Audit Your MCPs</h2>
+          <p class="lead">
+            Every attached MCP server loads its full tool schema into context on every
+            turn — even the ones you never call.
+          </p>
+          <p>
+            <code>mcp --audit</code> groups your MCP servers by source (settings.json
+            vs. plugin), flags any you haven't called in 30 days, and shows you the
+            top tools each one is actually used for. Idle MCPs are a silent
+            tool-schema tax on every request — the audit makes them visible and
+            tells you exactly how to remove them.
+          </p>
+        </div>
+        <div class="intro-stats">
+          <div class="stat">
+            <span class="stat-number">▸</span>
+            <span class="stat-label">grouped by plugin / settings</span>
+          </div>
+          <div class="stat">
+            <span class="stat-number">●</span>
+            <span class="stat-label">stale-MCP flag</span>
+          </div>
+          <div class="stat">
+            <span class="stat-number">$</span>
+            <span class="stat-label">copy-paste removal lines</span>
+          </div>
+        </div>
+      </div>
+      <div class="skills-terminal">
+        <TerminalBlock title="npx tokensquirrel claude mcp --audit">
+<span class="dim">$</span> npx tokensquirrel claude mcp --audit
+
+<span class="dim">▸</span> qmd — 1 server
+  Server         Source         Tport  Tools  Uses  Used  Top tools
+    qmd          qmd            stdio  3      87    16d   query×53, get×33, status×1
+
+<span class="dim">▸</span> github — 1 server · <span class="amber">1 stale</span>
+  <span class="amber">●</span> github       github         http   —      —     <span class="red">never</span>
+
+<span class="dim">▸</span> settings.json — 1 server · <span class="amber">1 stale</span>
+  <span class="amber">●</span> qmd          settings.json  stdio  —      —     <span class="red">never</span>
+
+<span class="green">Recommendations</span>
+  github@claude-plugins-official — all stale:
+    <span class="green">/plugin uninstall github@claude-plugins-official</span>
+  settings.json — 1/1 stale:
+    <span class="green">claude mcp remove qmd</span>
+
+<span class="dim">  Or let TokenSquirrel walk you through it: `tokensquirrel claude mcp --audit --fix`</span>
+
+<span class="dim">$</span> npx tokensquirrel claude mcp --audit --fix    <span class="dim"># walk through removals interactively</span>
+<span class="dim">$</span> npx tokensquirrel claude mcp --unused          <span class="dim"># only servers never invoked</span>
+<span class="dim">$</span> npx tokensquirrel claude mcp --by used         <span class="dim"># sort by recency (also: tools, source, name)</span>
+<span class="dim">$</span> npx tokensquirrel claude mcp --stale 14        <span class="dim"># tighten the stale window</span>
+        </TerminalBlock>
+      </div>
+    </div>
+  </section>
+
+  <!-- 15 Behaviours -->
+  <section class="section section-warm">
+    <div class="container">
+      <h2 class="section-title">15 Behaviours Scored</h2>
+      <p class="section-subtitle">Each behaviour maps to a real cost lever. Each one is something you can actually improve.</p>
+      <div class="grid grid-2 behaviours-grid">
+        {behaviours.map((b) => (
+          <BehaviourCard title={b.title} description={b.description} />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Get Started -->
+  <section class="section" id="get-started">
+    <div class="container">
+      <h2 class="section-title">Get Started</h2>
+      <p class="section-subtitle">One command. Everything stays on your machine.</p>
+      <div class="setup-content">
+        <TerminalBlock title="Terminal">
+<span class="dim">$</span> npx tokensquirrel                          <span class="dim"># compact score + cost (default: 24h)</span>
+<span class="dim">$</span> npx tokensquirrel claude --detail           <span class="dim"># full 15-behaviour scorecard</span>
+<span class="dim">$</span> npx tokensquirrel claude --hours 48         <span class="dim"># score the last 48 hours</span>
+<span class="dim">$</span> npx tokensquirrel claude --days 7           <span class="dim"># score the last 7 days</span>
+<span class="dim">$</span> npx tokensquirrel claude --weeks 4          <span class="dim"># score the last 4 weeks</span>
+<span class="dim">$</span> npx tokensquirrel claude --project my-app   <span class="dim"># filter to one project</span>
+<span class="dim">$</span> npx tokensquirrel claude --trend            <span class="dim"># score history over time</span>
+<span class="dim">$</span> npx tokensquirrel claude mot                <span class="dim"># MOT inspection (15-point service)</span>
+<span class="dim">$</span> npx tokensquirrel claude --dashboard        <span class="dim"># local web UI at :8080</span>
+<span class="dim">$</span> npx tokensquirrel claude skills --audit     <span class="dim"># find stale skills, suggest uninstalls</span>
+<span class="dim">$</span> npx tokensquirrel claude --format md        <span class="dim"># markdown output for sharing</span>
+        </TerminalBlock>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works -->
+  <section class="section section-warm">
+    <div class="container">
+      <h2 class="section-title">How It Works</h2>
+      <div class="how-grid">
+        <div class="how-step">
+          <span class="how-number">1</span>
+          <h3>Reads local data</h3>
+          <p>TokenSquirrel reads your <code>~/.claude/</code> directory — history, sessions, settings. Nothing leaves your machine.</p>
+        </div>
+        <div class="how-step">
+          <span class="how-number">2</span>
+          <h3>Scores 15 behaviours</h3>
+          <p>Each behaviour gets a score from 0–100 and a letter grade (A–F) based on evidence from your actual usage patterns.</p>
+        </div>
+        <div class="how-step">
+          <span class="how-number">3</span>
+          <h3>Estimates cost</h3>
+          <p>Using public Anthropic pricing, it estimates your daily spend and flags where habits are costing you the most.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Latest from the blog -->
+  <LatestBlog />
+
+  <!-- CTA -->
+  <section class="section section-dark">
+    <div class="container text-center">
+      <h2>The Theory and the Practice</h2>
+      <p class="lead mt-4" style="max-width: 55ch; margin-left: auto; margin-right: auto;">
+        The token economics series gives you the <em>what</em>. TokenSquirrel tells you whether any of it stuck.
+      </p>
+      <div class="series-links">
+        <a href="https://viewyonder.com/articles/token-economics-part-1" class="series-link">Part 1: Your AI Bill Is Lying to You</a>
+        <a href="https://viewyonder.com/articles/token-economics-part-2" class="series-link">Part 2: The Practitioner's Toolkit</a>
+        <a href="https://viewyonder.com/articles/token-economics-part-3" class="series-link">Part 3: Scaling the Discipline</a>
+        <a href="https://viewyonder.com/articles/token-economics-cheat-sheet" class="series-link">Cheat Sheet: Quick Reference</a>
+      </div>
+      <div class="cta-buttons">
+        <Button href="#get-started" variant="primary" size="lg">Get Started</Button>
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .section-title {
+    font-family: var(--font-serif);
+    font-size: var(--text-3xl);
+    margin: 0 0 var(--space-2);
+    text-transform: none;
+    letter-spacing: normal;
+  }
+
+  .section-subtitle {
+    color: var(--color-ink-light);
+    margin: 0 0 var(--space-8);
+  }
+
+  .intro-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: var(--space-12);
+    align-items: start;
+  }
+
+  .intro-content h2 {
+    font-family: var(--font-serif);
+    font-size: var(--text-3xl);
+    margin: 0 0 var(--space-6);
+    text-transform: none;
+    letter-spacing: normal;
+  }
+
+  .intro-content p {
+    margin-bottom: var(--space-4);
+  }
+
+  .intro-stats {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+    padding: var(--space-8);
+    background: var(--color-squirrel-bg);
+    border-left: 3px solid var(--color-squirrel);
+  }
+
+  .stat {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+
+  .stat-number {
+    font-family: var(--font-serif);
+    font-size: var(--text-4xl);
+    font-weight: 700;
+    color: var(--color-squirrel);
+    line-height: 1;
+  }
+
+  .stat-label {
+    font-family: var(--font-sans);
+    font-size: var(--text-sm);
+    color: var(--color-ink-light);
+  }
+
+  .behaviours-grid {
+    gap: var(--space-6);
+  }
+
+  .skills-terminal {
+    margin-top: var(--space-8);
+  }
+
+  .setup-content {
+    max-width: 700px;
+  }
+
+  /* How It Works */
+  .how-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-8);
+  }
+
+  .how-step {
+    position: relative;
+  }
+
+  .how-number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    font-family: var(--font-serif);
+    font-size: var(--text-xl);
+    font-weight: 700;
+    color: var(--color-paper);
+    background: var(--color-squirrel);
+    border-radius: 50%;
+    margin-bottom: var(--space-4);
+  }
+
+  .how-step h3 {
+    font-family: var(--font-serif);
+    font-size: var(--text-lg);
+    margin: 0 0 var(--space-2);
+    text-transform: none;
+    letter-spacing: normal;
+  }
+
+  .how-step p {
+    color: var(--color-ink-light);
+    font-size: var(--text-sm);
+    margin: 0;
+  }
+
+  .how-step code {
+    font-size: 0.85em;
+  }
+
+  /* Series links */
+  .series-links {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    margin: var(--space-6) auto var(--space-8);
+    max-width: 400px;
+  }
+
+  .series-link {
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    padding: var(--space-2) 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+    font-size: var(--text-sm);
+    transition: color var(--transition-base);
+  }
+
+  .series-link:hover {
+    color: #ffffff;
+  }
+
+  .series-link:last-child {
+    border-bottom: none;
+  }
+
+  .cta-buttons {
+    display: flex;
+    gap: var(--space-4);
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  @media (max-width: 768px) {
+    .intro-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .intro-stats {
+      flex-direction: row;
+    }
+
+    .behaviours-grid {
+      grid-template-columns: 1fr !important;
+    }
+
+    .how-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

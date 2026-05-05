@@ -1,0 +1,23 @@
+---
+export interface Props {
+  score: number;
+  grade: 'A' | 'B' | 'C' | 'D' | 'F';
+}
+
+const { score, grade } = Astro.props;
+
+const gradeColors: Record<string, string> = {
+  A: 'var(--grade-a)',
+  B: 'var(--grade-b)',
+  C: 'var(--grade-c)',
+  D: 'var(--grade-d)',
+  F: 'var(--grade-f)',
+};
+---
+
+<div class="score-bar">
+  <div
+    class="score-bar__fill"
+    style={`width: ${score}%; background-color: ${gradeColors[grade]}`}
+  />
+</div>

@@ -1,0 +1,188 @@
+---
+export interface Props {
+  title: string;
+  subtitle?: string;
+  description?: string;
+  eyebrow?: string;
+  centered?: boolean;
+  backgroundImage?: string;
+}
+
+const { title, subtitle, description, eyebrow, centered = false, backgroundImage } = Astro.props;
+---
+
+<section
+  class:list={['hero', { centered, 'has-bg': backgroundImage }]}
+  style={backgroundImage ? `background-image: url('${backgroundImage}');` : undefined}
+>
+  <div class="container">
+    <div class="hero-content">
+      {eyebrow && <span class="hero-eyebrow">{eyebrow}</span>}
+      <h1 class="hero-title">{title}</h1>
+      {subtitle && <p class="hero-subtitle">{subtitle}</p>}
+      {description && <p class="hero-description">{description}</p>}
+      <div class="hero-actions">
+        <slot />
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    padding: var(--space-20) 0;
+    border-bottom: var(--border-thick);
+  }
+
+  .hero.has-bg {
+    background-size: cover;
+    background-position: center 30%;
+    background-repeat: no-repeat;
+    padding: 0;
+    min-height: 70vh;
+    display: flex;
+    align-items: flex-end;
+  }
+
+  .hero-content {
+    max-width: 800px;
+  }
+
+  .has-bg .container {
+    width: 100%;
+    padding-top: var(--space-16);
+    padding-bottom: var(--space-10);
+  }
+
+  .has-bg .hero-content {
+    max-width: max-content;
+    padding: var(--space-6) var(--space-8);
+    background: rgba(20, 20, 20, 0.72);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    border-radius: 10px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.35);
+  }
+
+  .has-bg .hero-title {
+    margin-bottom: var(--space-4);
+  }
+
+  .has-bg .hero-actions :global(.btn-primary) {
+    background-color: var(--color-squirrel);
+    border-color: var(--color-squirrel);
+    color: #ffffff;
+  }
+
+  .has-bg .hero-actions :global(.btn-primary:hover) {
+    background-color: #a3631f;
+    border-color: #a3631f;
+    color: #ffffff;
+  }
+
+  .has-bg .hero-actions :global(.btn-secondary) {
+    background-color: var(--color-teal, #2a6b6b);
+    border-color: var(--color-teal, #2a6b6b);
+    color: #ffffff;
+  }
+
+  .has-bg .hero-actions :global(.btn-secondary:hover) {
+    background-color: #1f5050;
+    border-color: #1f5050;
+    color: #ffffff;
+  }
+
+  .has-bg .hero-eyebrow {
+    color: #ffb37a;
+  }
+
+  .has-bg .hero-title,
+  .has-bg .hero-subtitle,
+  .has-bg .hero-description {
+    color: #ffffff;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+  }
+
+  .has-bg .hero-subtitle,
+  .has-bg .hero-description {
+    color: rgba(255, 255, 255, 0.92);
+  }
+
+  .centered .hero-content {
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .hero-eyebrow {
+    display: block;
+    font-family: var(--font-sans);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-wider);
+    color: var(--color-squirrel);
+    margin-bottom: var(--space-4);
+  }
+
+  .hero-title {
+    font-family: var(--font-serif);
+    font-size: var(--text-6xl);
+    font-weight: 700;
+    line-height: var(--leading-none);
+    letter-spacing: var(--tracking-tight);
+    color: var(--color-ink);
+    margin: 0 0 var(--space-6);
+    text-transform: none;
+  }
+
+  .hero-subtitle {
+    font-family: var(--font-serif);
+    font-size: var(--text-2xl);
+    font-style: italic;
+    line-height: var(--leading-snug);
+    color: var(--color-ink-light);
+    margin: 0 0 var(--space-6);
+  }
+
+  .hero-description {
+    font-family: var(--font-sans);
+    font-size: var(--text-lg);
+    line-height: var(--leading-relaxed);
+    color: var(--color-ink-light);
+    margin: 0 0 var(--space-8);
+    max-width: 60ch;
+  }
+
+  .centered .hero-description {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-4);
+  }
+
+  .centered .hero-actions {
+    justify-content: center;
+  }
+
+  @media (max-width: 768px) {
+    .hero {
+      padding: var(--space-12) 0;
+    }
+
+    .hero-title {
+      font-size: var(--text-4xl);
+    }
+
+    .hero-subtitle {
+      font-size: var(--text-xl);
+    }
+
+    .hero-description {
+      font-size: var(--text-base);
+    }
+  }
+</style>

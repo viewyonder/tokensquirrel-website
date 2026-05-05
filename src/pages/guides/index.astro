@@ -1,0 +1,139 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import Hero from '../../components/Sections/Hero.astro';
+
+const entries = (await getCollection('guides')).sort(
+  (a, b) => a.data.order - b.data.order,
+);
+
+const levelMeta: Record<string, { label: string; tagline: string }> = {
+  '100': { label: 'Beginner', tagline: 'Install nothing, run one command, fix one habit.' },
+  '200': { label: 'Intermediate', tagline: 'Daily and weekly use, the full scorecard, the dashboard.' },
+  '300': { label: 'Advanced', tagline: 'Custom scorers, tuned thresholds, contributing back.' },
+};
+---
+
+<Layout
+  title="Guides — TokenSquirrel"
+  description="Product guides for TokenSquirrel, organised in three levels: Beginner, Intermediate, Advanced."
+>
+  <Hero
+    eyebrow="Guides"
+    title="Learn the product"
+    description="The user guide, sliced into three levels. Read top-to-bottom, or jump straight to where you are."
+    centered
+  />
+
+  <section class="section">
+    <div class="container">
+      <div class="level-grid">
+        {entries.map((entry) => (
+          <a class="level-card" href={`/guides/${entry.slug}`}>
+            <span class="level-tag">Level {entry.data.level} · {levelMeta[entry.data.level]?.label}</span>
+            <h2>{entry.data.title}</h2>
+            <p>{entry.data.summary}</p>
+            <span class="level-cta">Read guide →</span>
+          </a>
+        ))}
+      </div>
+
+      <div class="hub-aside">
+        <h3>Looking for use cases instead?</h3>
+        <p>
+          Guides cover product features and functions. <a href="/tutorials">Tutorials</a> cover specific habits and use cases — try those if you'd rather start from "what should I do differently this week."
+        </p>
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .level-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-6);
+  }
+
+  .level-card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    padding: var(--space-6);
+    background: var(--color-paper);
+    border: var(--border-thin);
+    border-top: 3px solid var(--color-squirrel);
+    text-decoration: none;
+    color: var(--color-ink);
+    transition: transform var(--transition-fast), border-color var(--transition-fast);
+  }
+
+  .level-card:hover {
+    transform: translateY(-2px);
+    border-color: var(--color-squirrel);
+  }
+
+  .level-tag {
+    font-family: var(--font-sans);
+    font-size: var(--text-xs);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-wide);
+    color: var(--color-squirrel);
+  }
+
+  .level-card h2 {
+    font-family: var(--font-serif);
+    font-size: var(--text-xl);
+    margin: 0;
+    text-transform: none;
+    letter-spacing: normal;
+  }
+
+  .level-card p {
+    margin: 0;
+    color: var(--color-ink-light);
+    font-size: var(--text-sm);
+    line-height: 1.6;
+  }
+
+  .level-cta {
+    margin-top: auto;
+    font-family: var(--font-sans);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--color-squirrel);
+  }
+
+  .hub-aside {
+    margin-top: var(--space-12);
+    padding: var(--space-6) var(--space-8);
+    background: var(--color-squirrel-bg);
+    border-left: 3px solid var(--color-squirrel);
+    max-width: 60ch;
+  }
+
+  .hub-aside h3 {
+    font-family: var(--font-serif);
+    font-size: var(--text-lg);
+    margin: 0 0 var(--space-2);
+    text-transform: none;
+    letter-spacing: normal;
+  }
+
+  .hub-aside p {
+    margin: 0;
+    color: var(--color-ink-light);
+  }
+
+  .hub-aside a {
+    color: var(--color-squirrel);
+    font-weight: 600;
+  }
+
+  @media (max-width: 768px) {
+    .level-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
