@@ -6,5 +6,9 @@
 	},
 	"observability": {
 		"enabled": true
-	}
+	},
+	"routes": [
+		{ "pattern": "tokensquirrel.com", "custom_domain": true },
+		{ "pattern": "www.tokensquirrel.com", "custom_domain": true }
+	]
 }
