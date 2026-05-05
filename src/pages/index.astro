@@ -42,29 +42,15 @@ const behaviours = [
     <div class="container">
       <div class="intro-grid">
         <div class="intro-content">
-          <h2>Your Claude Workflow Has No Feedback Loop</h2>
+          <h2>See it. Fix what matters.</h2>
           <p class="lead">
-            Whether you're on Pro, Max, or paying per token on the API, the question isn't
-            whether you're spending too much. It's whether the tokens you're paying for are
-            landing on the work that actually matters — and whether your setup is quietly
-            burning credits before you've typed a single character.
+            TokenSquirrel scores 15 things about how you use Claude Code, then tells you
+            the two or three that are actually costing you. Plain English. One command.
           </p>
           <p>
-            Modern Claude Code sessions mix Opus, Sonnet, and Haiku — saving the expensive
-            reasoning for the hard problems, the cheap models for everything else. But they
-            also run alongside MCP servers you forgot you installed, skills you haven't
-            invoked in months, CLAUDE.md files that grew to 800 lines, and hooks firing on
-            every prompt. None of it is <em>broken</em>. It's why you hit the credit limit
-            at 3pm with the hard problem still open, and why your context is 70% full
-            before you start.
-          </p>
-          <p>
-            TokenSquirrel is the missing feedback loop. It audits your Claude Code sessions
-            and scores 15 specific behaviours across discipline, hygiene, and setup weight —
-            each rated 0–100 with a letter grade. The point isn't to spend less. It's to
-            make sure your expensive tokens go where they earn their keep, so you get more
-            from the plan you're already paying for and never run out of credits or context
-            when it matters.
+            No dashboards to babysit. No account. Nothing leaves your machine. Run it,
+            fix the obvious stuff, get on with your day. The squirrel will tap you on
+            the shoulder in a week — you don't have to remember.
           </p>
         </div>
         <div class="intro-stats">
@@ -105,6 +91,45 @@ const behaviours = [
   Bottom line: ~$4.20/day spend, ~$1.10 of that is avoidable.
   <span class="dim">--detail for full scorecard | --trend for history</span>
       </TerminalBlock>
+    </div>
+  </section>
+
+  <!-- Squirrel Nudge -->
+  <section class="section">
+    <div class="container">
+      <div class="intro-grid">
+        <div class="intro-content">
+          <h2>The squirrel finds you</h2>
+          <p class="lead">
+            Most tools you install are ones you have to remember to use. This one isn't.
+          </p>
+          <p>
+            When you run <code>npx tokensquirrel</code> for the first time, it offers
+            to install a tiny SessionStart hook in your Claude Code config. A week
+            later, the next time you open Claude, it'll mention — in its own voice,
+            in one line — that the squirrel is wondering whether your habits stuck.
+            Run the audit, or don't. Uninstall any time with
+            <code>npx tokensquirrel claude --uninstall-nudge</code>.
+          </p>
+          <p>
+            One install. No background processes. No emails. No app to open.
+          </p>
+        </div>
+        <div class="intro-stats">
+          <div class="stat">
+            <span class="stat-number">7d</span>
+            <span class="stat-label">first nudge after a week idle</span>
+          </div>
+          <div class="stat">
+            <span class="stat-number">1</span>
+            <span class="stat-label">line, in Claude's own voice</span>
+          </div>
+          <div class="stat">
+            <span class="stat-number">0</span>
+            <span class="stat-label">accounts, emails, daemons</span>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 
